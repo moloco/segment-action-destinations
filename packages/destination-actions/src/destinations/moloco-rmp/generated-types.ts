@@ -9,4 +9,8 @@ export interface Settings {
    * The API key for the platform
    */
   apiKey: string
+  /**
+   * Type of channel, either APP or SITE. Defaults to SITE.
+   */
+  channel_type: string
 }

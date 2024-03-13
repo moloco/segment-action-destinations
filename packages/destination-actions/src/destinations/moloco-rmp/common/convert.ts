@@ -1,15 +1,14 @@
 import { PayloadValidationError } from '@segment/actions-core'
 import { EventType } from './event'
+import { Settings } from '../generated-types'
 import {
   EventPayload as SegmentEventPayload,
   ItemPayload as SegmentItemPayload,
-  MoneyPayload as SegmentMoneyPayload,
   DevicePayload as SegmentDevicePayload
 } from './payload/segment'
 import {
   EventPayload as MolocoEventPayload,
   ItemPayload as MolocoItemPayload,
-  MoneyPayload as MolocoMoneyPayload,
   DevicePayload as MolocoDevicePayload
 } from './payload/moloco'
 
@@ -17,97 +16,50 @@ import {
 // This function coverts the SegmentEventPayload to MolocoEventPayload
 // SegmentEventPayload is the payload that went through the mapping defined in the Segment UI
 // MolocoEventPayload is the payload that will be sent to the Moloco RMP API
-export function convertEvent(args: { eventType: EventType, payload: SegmentEventPayload }): MolocoEventPayload {
-  const { eventType, payload } = args;
+export function convertEvent(args: { eventType: EventType, payload: SegmentEventPayload, settings: Settings }): MolocoEventPayload {
+  const { eventType, payload, settings } = args;
 
-  const body: MolocoEventPayload = {
-    event_type: eventType,
-    channel_type: payload.channelType,
-    timestamp: payload.timestamp
-  };
-
-  if (payload.eventId) {
-    body.event_id = payload.eventId;
-  }
-
-  if (payload.userId) {
-    body.user_id = payload.userId;
-  }
-
-  if (payload.device) {
-    body.device = convertDevicePayload(payload.device);
-  }
-
-  if (payload.sessionId) {
-    body.session_id = payload.sessionId;
-  }
-
-  if (payload.items) {
-    body.items = []
-    for (const item of payload.items) {
-      const itemPayload = convertItemPayload({ payload: item, defaultCurrency: payload.defaultCurrency });
-      body.items.push(itemPayload);
-    }
-  }
-
-  if (payload.revenue) {
-    body.revenue = convertMoneyPayload(payload.revenue);
-  }
-
-  if (payload.searchQuery) {
-    body.search_query = payload.searchQuery;
-  }
-
-  if (payload.pageId || payload.pageIdentifierTokens) {
-    if (!(payload.pageId)) {
-      body.page_id = convertPageIdentifierTokensToPageId(payload.pageIdentifierTokens);
-    } else {
-      body.page_id = payload.pageId;
-    }
-  }  
-
-  if (payload.referrerPageId) {
-    body.referrer_page_id = payload.referrerPageId;
-  }
-
-  if (payload.shippingCharge) {
-    body.shipping_charge = convertMoneyPayload(payload.shippingCharge);
-  }
-
-  return body;
-}
-
-function convertMoneyPayload(payload: SegmentMoneyPayload): MolocoMoneyPayload {
   return {
-    amount: payload.price,
-    currency: payload.currency
-  }
+    event_type: eventType,
+    channel_type: settings.channel_type,
+    timestamp: payload.timestamp,
+    id: payload.event_id ?? undefined,
+    user_id: payload.user_id ?? undefined,
+    device: payload.device ? convertDevicePayload(payload.device): undefined,
+    session_id: payload.session_id ?? undefined,
+    revenue: payload.revenue ? {
+      amount: payload.revenue.price,
+      currency: payload.revenue.currency
+    } : undefined,
+    search_query: payload.search_query ?? undefined,
+    referrer_page_id: payload.referrer_page_id ?? undefined,
+    shipping_charge: payload.shipping_charge ?{
+      amount: payload.shipping_charge.price,
+      currency: payload.shipping_charge.currency
+    }: undefined,
+    items: payload.items ? payload.items.map(item => convertItemPayload({ payload: item, defaultCurrency: payload.default_currency })) : undefined,
+    page_id: payload.page_id || (payload.page_identifier_tokens ? convertPageIdentifierTokensToPageId(payload.page_identifier_tokens) : undefined)
+  } as MolocoEventPayload
 }
 
 function convertItemPayload(args: { payload: SegmentItemPayload, defaultCurrency: string | undefined }): MolocoItemPayload {
   const { payload, defaultCurrency } = args;
-  const itemPayload: MolocoItemPayload = {
-    id: payload.id
-  }
-
-  if (payload.quantity) {
-    itemPayload.quantity = payload.quantity;
-  }
-
-  if (payload.sellerId) {
-    itemPayload.seller_id = payload.sellerId;
-  }
-
-  if (payload.price || payload.currency) {
-    const currency = payload.currency || defaultCurrency;
   
-    if (!(payload.price && currency)) {
-      throw new PayloadValidationError('price and currency should be both present or both absent')
-    }
-    itemPayload.price = convertMoneyPayload({ price: payload.price, currency: currency });
+  const actualCurrency = payload.currency ?? defaultCurrency
+
+  if ((payload.price !== undefined && actualCurrency === undefined) || (payload.price === undefined && actualCurrency !== undefined)) {
+    throw new PayloadValidationError('Price and Currency/Default Currency should be both present or both absent');
   }
 
-  return itemPayload;
+  return {
+    id: payload.id,
+    quantity: payload.quantity,
+    seller_id: payload.seller_id,
+    price: payload.price && actualCurrency ? {
+      amount: payload.price,
+      currency: actualCurrency
+    } : undefined
+  } as MolocoItemPayload;
 }
 
 function convertOs(os: string): string {
@@ -121,41 +73,16 @@ function convertOs(os: string): string {
 }
 
 function convertDevicePayload(payload: SegmentDevicePayload): MolocoDevicePayload {
-  const devicePayload: MolocoDevicePayload = {}
-
-  if (payload.os) {
-    devicePayload.os = convertOs(payload.os);
-  }
-
-  if (payload.osVersion) {
-    devicePayload.os_version = payload.osVersion;
-  }
-
-  if (payload.advertisingId) {
-    devicePayload.advertising_id = payload.advertisingId;
-  }
-
-  if (payload.uniqueDeviceId) {
-    devicePayload.unique_device_id = payload.uniqueDeviceId;
-  }
-
-  if (payload.model) {
-    devicePayload.model = payload.model;
-  }
-
-  if (payload.ua) {
-    devicePayload.ua = payload.ua;
-  }
-
-  if (payload.language) {
-    devicePayload.language = payload.language;
-  }
-
-  if (payload.ip) {
-    devicePayload.ip = payload.ip;
-  }
-
-  return devicePayload
+  return {
+    os: payload.os ? convertOs(payload.os) : undefined,
+    os_version: payload.os_version ?? undefined,
+    advertising_id: payload.advertising_id ?? undefined,
+    unique_device_id: payload.unique_device_id ?? undefined,
+    model: payload.model ?? undefined,
+    ua: payload.ua ?? undefined,
+    language: payload.language ?? undefined,
+    ip: payload.ip ?? undefined,
+  } as MolocoDevicePayload
 }
 
 function convertPageIdentifierTokensToPageId(tokens: { [k: string]: unknown } | undefined): string {

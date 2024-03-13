@@ -1,5 +1,4 @@
 import nock from 'nock'
-import { AggregateAjvError } from '@segment/ajv-human-errors'
 import { createTestEvent, createTestIntegration } from '@segment/actions-core'
 import Destination from '../../index'
 
@@ -41,11 +40,11 @@ describe('MolocoRmp.pageView', () => {
       event,
       settings: {
         platformId: 'foo',
-        apiKey: 'bar'
+        apiKey: 'bar',
+        channel_type: 'SITE'
       },
       mapping: {
-        timestamp: { '@path': '$.timestamp' },
-        channelType: 'SITE'
+
         // page_id is default to context.page.path
       },
       useDefaultMappings: true,

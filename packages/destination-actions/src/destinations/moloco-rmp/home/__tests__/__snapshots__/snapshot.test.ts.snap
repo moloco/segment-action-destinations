@@ -2,7 +2,7 @@
 
 exports[`Testing snapshot for MolocoRmp's home destination action: all fields 1`] = `
 Object {
-  "channel_type": "SITE",
+  "channel_type": "M7i8t#AejMHF0ojzM0NV",
   "device": Object {
     "advertising_id": "M7i8t#AejMHF0ojzM0NV",
     "ip": "M7i8t#AejMHF0ojzM0NV",
@@ -13,21 +13,20 @@ Object {
     "ua": "M7i8t#AejMHF0ojzM0NV",
     "unique_device_id": "M7i8t#AejMHF0ojzM0NV",
   },
-  "event_id": "M7i8t#AejMHF0ojzM0NV",
   "event_type": "HOME",
+  "id": "M7i8t#AejMHF0ojzM0NV",
   "items": Array [
     Object {
       "id": "M7i8t#AejMHF0ojzM0NV",
       "price": Object {
         "amount": 84218396593356.8,
-        "currency": "RUB",
+        "currency": "VEF",
       },
-      "quantity": 84218396593356.8,
+      "quantity": 8421839659335680,
       "seller_id": "M7i8t#AejMHF0ojzM0NV",
     },
   ],
   "page_id": "M7i8t#AejMHF0ojzM0NV",
-  "referrer_page_id": "M7i8t#AejMHF0ojzM0NV",
   "session_id": "M7i8t#AejMHF0ojzM0NV",
   "timestamp": "2021-02-01T00:00:00.000Z",
   "user_id": "M7i8t#AejMHF0ojzM0NV",
@@ -36,8 +35,12 @@ Object {
 
 exports[`Testing snapshot for MolocoRmp's home destination action: required fields 1`] = `
 Object {
-  "channel_type": "SITE",
+  "channel_type": "M7i8t#AejMHF0ojzM0NV",
   "event_type": "HOME",
+  "id": "M7i8t#AejMHF0ojzM0NV",
+  "page_id": "M7i8t#AejMHF0ojzM0NV",
+  "session_id": "M7i8t#AejMHF0ojzM0NV",
   "timestamp": "2021-02-01T00:00:00.000Z",
+  "user_id": "M7i8t#AejMHF0ojzM0NV",
 }
 `;
