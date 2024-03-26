@@ -42,7 +42,7 @@ const eventConversionTypeToActionSource: { [k in string]?: string } = {
 
 const iosAppIDRegex = new RegExp('^[0-9]+$')
 
-export const formatPayload = (payload: Payload, settings: Settings, isTest = true): object => {
+export const formatPayload = (payload: Payload, settings: Settings): object => {
   const app_id = emptyStringToUndefined(settings.app_id)
 
   // event_conversion_type is a required parameter whose value is enforced as
@@ -67,7 +67,7 @@ export const formatPayload = (payload: Payload, settings: Settings, isTest = tru
     products.length > 0
       ? {
           content_ids: products.map(({ item_id }) => item_id),
-          content_category: products.map(({ item_category }) => item_category),
+          content_category: products.map(({ item_category }) => item_category ?? ''),
           brands: products.map((product) => product.brand ?? ''),
           num_items: products.length
         }
@@ -157,8 +157,7 @@ export const formatPayload = (payload: Payload, settings: Settings, isTest = tru
         action_source,
         app_data
       }
-    ],
-    ...(isTest ? { test_event_code: 'segment_test' } : {})
+    ]
   }
 
   return result
@@ -171,11 +170,26 @@ export const validateAppOrPixelID = (settings: Settings, event_conversion_type: 
 
   // Some configurations specify both a snapPixelID and a snapAppID. In these cases
   // check the conversion type to ensure that the right id is selected and used.
-  const appOrPixelID = event_conversion_type === 'WEB' ? snapPixelID : snapAppID
+  const appOrPixelID = (() => {
+    switch (event_conversion_type) {
+      case 'WEB':
+      case 'OFFLINE':
+        return snapPixelID
+      case 'MOBILE_APP':
+        return snapAppID
+      default:
+        return undefined
+    }
+  })()
+
+  raiseMisconfiguredRequiredFieldErrorIf(
+    event_conversion_type === 'OFFLINE' && isNullOrUndefined(snapPixelID),
+    'If event conversion type is "OFFLINE" then Pixel ID must be defined'
+  )
 
   raiseMisconfiguredRequiredFieldErrorIf(
     event_conversion_type === 'MOBILE_APP' && isNullOrUndefined(snapAppID),
-    'If event conversion type is "MOBILE_APP" then Snap App ID and App ID must be defined'
+    'If event conversion type is "MOBILE_APP" then Snap App ID must be defined'
   )
 
   raiseMisconfiguredRequiredFieldErrorIf(
@@ -193,8 +207,7 @@ export const buildRequestURL = (appOrPixelID: string, authToken: string) =>
 
 export const performSnapCAPIv3 = async (
   request: RequestClient,
-  data: ExecuteInput<Settings, Payload>,
-  isTest = true
+  data: ExecuteInput<Settings, Payload>
 ): Promise<ModifiedResponse<unknown>> => {
   const { payload, settings } = data
   const { event_conversion_type } = payload
@@ -203,7 +216,7 @@ export const performSnapCAPIv3 = async (
   raiseMisconfiguredRequiredFieldErrorIfNullOrUndefined(authToken, 'Missing valid auth token')
 
   const url = buildRequestURL(validateAppOrPixelID(settings, event_conversion_type), authToken)
-  const json = formatPayload(validatePayload(payload), settings, isTest)
+  const json = formatPayload(validatePayload(payload), settings)
 
   return request(url, {
     method: 'post',

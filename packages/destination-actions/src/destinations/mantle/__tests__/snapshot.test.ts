@@ -4,7 +4,7 @@ import destination from '../index'
 import nock from 'nock'
 
 const testDestination = createTestIntegration(destination)
-const destinationSlug = 'actions-linkedin-conversions'
+const destinationSlug = 'actions-mantle'
 
 describe(`Testing snapshot for ${destinationSlug} destination:`, () => {
   for (const actionSlug in destination.actions) {
@@ -17,30 +17,13 @@ describe(`Testing snapshot for ${destinationSlug} destination:`, () => {
       nock(/.*/).persist().post(/.*/).reply(200)
       nock(/.*/).persist().put(/.*/).reply(200)
 
-      eventData.userIds = [
-        {
-          idType: 'SHA256_EMAIL',
-          idValue: 'bad8677b6c86f5d308ee82786c183482a5995f066694246c58c4df37b0cc41f1'
-        }
-      ]
-
-      eventData.conversionHappenedAt = Date.now()
-
       const event = createTestEvent({
         properties: eventData
       })
 
       const responses = await testDestination.testAction(actionSlug, {
         event: event,
-        mapping: {
-          ...event.properties,
-          onMappingSave: {
-            inputs: {},
-            outputs: {
-              id: '1234'
-            }
-          }
-        },
+        mapping: event.properties,
         settings: settingsData,
         auth: undefined
       })
@@ -68,30 +51,13 @@ describe(`Testing snapshot for ${destinationSlug} destination:`, () => {
       nock(/.*/).persist().post(/.*/).reply(200)
       nock(/.*/).persist().put(/.*/).reply(200)
 
-      eventData.userIds = [
-        {
-          idType: 'SHA256_EMAIL',
-          idValue: 'bad8677b6c86f5d308ee82786c183482a5995f066694246c58c4df37b0cc41f1'
-        }
-      ]
-
-      eventData.conversionHappenedAt = Date.now()
-
       const event = createTestEvent({
         properties: eventData
       })
 
       const responses = await testDestination.testAction(actionSlug, {
         event: event,
-        mapping: {
-          ...event.properties,
-          onMappingSave: {
-            inputs: {},
-            outputs: {
-              id: '1234'
-            }
-          }
-        },
+        mapping: event.properties,
         settings: settingsData,
         auth: undefined
       })
