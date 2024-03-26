@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Testing snapshot for MolocoRmp's pageView destination action: all fields 1`] = `
+exports[`Testing snapshot for MolocoMCM's pageView destination action: all fields 1`] = `
 Object {
   "channel_type": "W97yQ",
   "device": Object {
@@ -34,7 +34,7 @@ Object {
 }
 `;
 
-exports[`Testing snapshot for MolocoRmp's pageView destination action: required fields 1`] = `
+exports[`Testing snapshot for MolocoMCM's pageView destination action: required fields 1`] = `
 Object {
   "channel_type": "W97yQ",
   "event_type": "PAGE_VIEW",
