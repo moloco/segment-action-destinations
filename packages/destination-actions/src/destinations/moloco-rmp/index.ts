@@ -20,7 +20,7 @@ import addToCart from './addToCart'
 
 const destination: DestinationDefinition<Settings> = {
   name: 'Moloco MCM',
-  slug: 'actions-moloco-mcm',
+  slug: 'actions-moloco-rmp',
   mode: 'cloud',
   description: 'This destination sends user events to Moloco MCM for machine learning and ad attribution.',
   authentication: {
