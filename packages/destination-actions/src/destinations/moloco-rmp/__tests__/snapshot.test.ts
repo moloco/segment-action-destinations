@@ -11,7 +11,12 @@ describe(`Testing snapshot for ${destinationSlug} destination:`, () => {
     it(`${actionSlug} action - required fields`, async () => {
       const seedName = `${destinationSlug}#${actionSlug}`
       const action = destination.actions[actionSlug]
-      const [eventData, settingsData] = generateTestData(seedName, destination, action, true)
+      const [eventData, _] = generateTestData(seedName, destination, action, true)
+      const settingsData = {
+        platformId: 'test',
+        apiKey: 'test',
+        channel_type: 'WEB'
+      }
 
       nock(/.*/).persist().get(/.*/).reply(200)
       nock(/.*/).persist().post(/.*/).reply(200)
