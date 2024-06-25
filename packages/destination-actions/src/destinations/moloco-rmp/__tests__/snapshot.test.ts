@@ -2,6 +2,7 @@ import { createTestEvent, createTestIntegration } from '@segment/actions-core'
 import { generateTestData } from '../../../lib/test-data'
 import destination from '../index'
 import nock from 'nock'
+import { platform } from 'os'
 
 const testDestination = createTestIntegration(destination)
 const destinationSlug = 'actions-moloco-rmp'
@@ -14,6 +15,7 @@ describe(`Testing snapshot for ${destinationSlug} destination:`, () => {
       const [eventData, _] = generateTestData(seedName, destination, action, true)
       const settingsData = {
         platformId: 'test',
+        platformName: 'test',
         apiKey: 'test',
         channel_type: 'WEB'
       }

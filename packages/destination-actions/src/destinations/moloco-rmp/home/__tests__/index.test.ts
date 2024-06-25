@@ -13,6 +13,7 @@ describe('MolocoMCM.home', () => {
       event,
       settings: {
         platformId: 'foo',
+        platformName: 'foo',
         apiKey: 'bar',
         channel_type: 'SITE'
       },

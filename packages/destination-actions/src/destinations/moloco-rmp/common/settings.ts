@@ -4,5 +4,6 @@
 // This interface is the generalized version of that auto-generated interface. 
 export interface Settings {
     platformId: string
+    platformName: string
     apiKey: string
 }

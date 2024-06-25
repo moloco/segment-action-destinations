@@ -40,6 +40,7 @@ describe('MolocoMCM.pageView', () => {
       event,
       settings: {
         platformId: 'foo',
+        platformName: 'foo',
         apiKey: 'bar',
         channel_type: 'SITE'
       },

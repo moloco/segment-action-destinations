@@ -14,6 +14,7 @@ const TEST_EVENT_TYPE = EventType.Home
 
 const AUTH = {
   platformId: 'foo',
+  platformName: 'foo',
   apiKey: 'bar',
   channel_type: 'SITE'
 }

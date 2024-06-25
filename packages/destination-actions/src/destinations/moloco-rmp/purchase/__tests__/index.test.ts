@@ -26,6 +26,7 @@ describe('MolocoMCM.purchase', () => {
       event,
       settings: {
         platformId: 'foo',
+        platformName: 'foo',
         apiKey: 'bar',
         channel_type: 'SITE',
       },
@@ -86,6 +87,7 @@ describe('MolocoMCM.purchase', () => {
       event,
       settings: {
         platformId: 'foo',
+        platformName: 'foo',
         apiKey: 'bar',
         channel_type: 'SITE'
       },

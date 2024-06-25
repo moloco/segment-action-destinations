@@ -25,6 +25,7 @@ describe('MolocoMCM.addToWishlist', () => {
       event,
       settings: {
         platformId: 'foo',
+        platformName: 'foo',
         apiKey: 'bar', 
         channel_type: 'SITE'
       },
@@ -76,6 +77,7 @@ describe('MolocoMCM.addToWishlist', () => {
       event,
       settings: {
         platformId: 'foo',
+        platformName: 'foo',
         apiKey: 'bar',
         channel_type: 'SITE'
       },

@@ -104,7 +104,7 @@ describe('Moloco MCM', () => {
         }
       }
         
-      const output: MolocoEventPayload = convertEvent({ eventType: TEST_EVENT_TYPE, payload: input, settings: { channel_type: 'APP', platformId: 'any_plat_id', apiKey: 'any_api_key'}})
+      const output: MolocoEventPayload = convertEvent({ eventType: TEST_EVENT_TYPE, payload: input, settings: { channel_type: 'APP', platformId: 'any_plat_id', platformName: 'any_plat_name', apiKey: 'any_api_key'}})
       expect(output).toEqual(expectedOutput)
     })
 
@@ -203,7 +203,7 @@ describe('Moloco MCM', () => {
         }
       }
         
-      const output: MolocoEventPayload = convertEvent({ eventType: TEST_EVENT_TYPE, payload: input, settings: { channel_type: 'APP', platformId: 'any_plat_id', apiKey: 'any_api_key'}})
+      const output: MolocoEventPayload = convertEvent({ eventType: TEST_EVENT_TYPE, payload: input, settings: { channel_type: 'APP', platformId: 'any_plat_id', platformName: 'any_plat_name', apiKey: 'any_api_key'}})
       expect(output).toEqual(expectedOutput)
     })
 
@@ -302,7 +302,7 @@ describe('Moloco MCM', () => {
         }
       }
         
-      const output: MolocoEventPayload = convertEvent({ eventType: TEST_EVENT_TYPE, payload: input, settings: { channel_type: 'APP', platformId: 'any_plat_id', apiKey: 'any_api_key'}})
+      const output: MolocoEventPayload = convertEvent({ eventType: TEST_EVENT_TYPE, payload: input, settings: { channel_type: 'APP', platformId: 'any_plat_id', platformName: 'any_plat_name', apiKey: 'any_api_key'}})
       expect(output).toEqual(expectedOutput)
     })
 
@@ -400,7 +400,7 @@ describe('Moloco MCM', () => {
         }
       }
         
-      const output: MolocoEventPayload = convertEvent({ eventType: TEST_EVENT_TYPE, payload: input, settings: { channel_type: 'APP', platformId: 'any_plat_id', apiKey: 'any_api_key'}})
+      const output: MolocoEventPayload = convertEvent({ eventType: TEST_EVENT_TYPE, payload: input, settings: { channel_type: 'APP', platformId: 'any_plat_id', platformName: 'any_plat_name', apiKey: 'any_api_key'}})
       expect(output).toEqual(expectedOutput)
     })
 
@@ -437,7 +437,7 @@ describe('Moloco MCM', () => {
         ]
       }
 
-      expect(() => convertEvent({ eventType: TEST_EVENT_TYPE, payload: input,  settings: { channel_type: 'APP', platformId: 'any_plat_id', apiKey: 'any_api_key'} })).toThrowError(PayloadValidationError)
+      expect(() => convertEvent({ eventType: TEST_EVENT_TYPE, payload: input,  settings: { channel_type: 'APP', platformId: 'any_plat_id', platformName: 'any_plat_name', apiKey: 'any_api_key'} })).toThrowError(PayloadValidationError)
     })
   })
 })

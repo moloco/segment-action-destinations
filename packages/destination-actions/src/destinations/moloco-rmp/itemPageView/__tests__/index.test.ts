@@ -25,6 +25,7 @@ describe('MolocoMCM.itemPageView', () => {
       event,
       settings: {
         platformId: 'foo',
+        platformName: 'foo',
         apiKey: 'bar',
         channel_type: 'SITE',
       },
@@ -77,6 +78,7 @@ describe('MolocoMCM.itemPageView', () => {
       event,
       settings: {
         platformId: 'foo',
+        platformName: 'foo',
         apiKey: 'bar',
         channel_type: 'SITE',
       },
