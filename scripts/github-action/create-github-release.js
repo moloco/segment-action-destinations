@@ -143,7 +143,8 @@ async function getPRsBetweenCommits(github, context, core, lastCommit, currentCo
 
     return prsMerged.search.nodes.map((pr) => ({
       number: `[#${pr.number}](${pr.url})`,
-      title: pr.title,
+      // escape the pipe character in the title to avoid table formatting issues
+      title: pr.title.replace('|', '\\|'),
       url: pr.url,
       files: pr.files.nodes.map((file) => file.path),
       author: `@${pr.author.login}`,
@@ -196,13 +197,11 @@ function formatChangeLog(prs, tagsContext, context) {
   // if there is no previous release, we simply print the current release
   const releaseDiff = prevRelease ? `${prevRelease}...${currentRelease}` : currentRelease
 
-  const formattedPackageTags = packageTags
-    .map((tag) => `- [${tag}](https://www.npmjs.com/package/${formatNPMPackageURL(tag)})`)
-    .join('\n')
+  const formattedPackageTags = packageTags.map((tag) => `- ${formatNPMPackageURL(tag)}`).join('\n')
 
   const changelog = `
     # What's New
-    
+
     https://github.com/${context.repo.owner}/${context.repo.repo}/compare/${releaseDiff}
 
     ## Packages Published
@@ -210,7 +209,7 @@ function formatChangeLog(prs, tagsContext, context) {
     ${formattedPackageTags || 'No packages published'}
 
     ${internalPRS.length > 0 ? formatTable(internalPRS, tableConfig, '## Internal PRs') : ''}
-        
+
     ${externalPRs.length > 0 ? formatTable(externalPRs, tableConfig, '## External PRs') : ''}
     `
   // trim double spaces and return the changelog
@@ -227,8 +226,9 @@ function formatTable(prs, tableConfig, title = '') {
     ${prs.map((pr) => `|${tableConfig.map((config) => pr[config.value]).join('|')}|`).join('\n')}
     `
 }
-
-// Map PRs with affected destinations based on the files changed
+/*
+  * Map PR with affected destinations
+ */
 function mapPRWithAffectedDestinations(pr) {
   let affectedDestinations = []
   if (pr.labels.includes('mode:cloud')) {
