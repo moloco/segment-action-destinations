@@ -4,8 +4,13 @@ import destination from '../../index'
 import nock from 'nock'
 
 const testDestination = createTestIntegration(destination)
+<<<<<<< HEAD:segment/packages/destination-actions/src/destinations/moloco-rmp/addToWishlist/__tests__/snapshot.test.ts
 const actionSlug = 'addToWishlist'
 const destinationSlug = 'MolocoRmp'
+=======
+const actionSlug = 'addToCart'
+const destinationSlug = 'MolocoMCM'
+>>>>>>> c6b8dd145374e4b7938b252bc7f741807312479c:segment/packages/destination-actions/src/destinations/moloco-rmp/addToCart/__tests__/snapshot.test.ts
 const seedName = `${destinationSlug}#${actionSlug}`
 
 describe(`Testing snapshot for ${destinationSlug}'s ${actionSlug} destination action:`, () => {
